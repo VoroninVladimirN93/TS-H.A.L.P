@@ -1,0 +1,49 @@
+.cardContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 15px;
+  border-radius: 28px;
+  transition: border-color 0.3s ease;
+  width: 500px;
+  align-items: center
+}
+
+.done {
+  border: 4px solid green;
+}
+
+.undone {
+  border: 4px solid red;
+}
+
+.canceled {
+  border: 4px solid gray;
+}
+
+.paused {
+  border: 4px solid orange;
+}
+
+.cardTitle {
+  font-weight: bold;
+  font-size: 18px;
+}
+
+.cardDescription {
+  font-size: 16px;
+}
+
+.cardStatus {
+  font-size: 22px;
+
+}
+
+.cardButtons {
+  display: flex;
+  gap: 10px;
+}
+
+.cardButtons button {
+  cursor: pointer;
+}

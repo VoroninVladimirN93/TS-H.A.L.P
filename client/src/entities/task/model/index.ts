@@ -1,8 +1,10 @@
 export type RawTaskData = {
   title: string;
   description: string;
-  status?: "done" | "undone" | "paused" | "canceled";
+  status: TaskStatus
 };
+
+export type TaskStatus = "done" | "undone" | "canceled" | "paused";
 
 export type Task = RawTaskData & {
   id: number;
@@ -12,3 +14,4 @@ export type Task = RawTaskData & {
 };
 
 export type ArrayTasksType = Task[];
+

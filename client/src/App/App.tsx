@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import "./App.css";
+// import "./App.css";
 import { UserType, UserWithTokenType } from "../entities/user/model";
 import UserApi from "../entities/user/api/UserApi";
 import { ApiResponseSuccess } from "../shared/types";
@@ -40,8 +40,6 @@ function App() {
       element: (
         <>
           <Navbar setUser={setUser} user={user} />
-          <p>{user && `Привет, ${user.username}`}</p>
-
           <Outlet />
         </>
       ),

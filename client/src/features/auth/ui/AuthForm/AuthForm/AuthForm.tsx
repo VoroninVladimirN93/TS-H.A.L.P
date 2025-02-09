@@ -7,7 +7,7 @@ import UserApi from "../../../../../entities/user/api/UserApi";
 import { setAccessToken } from "../../../../../shared/lib/axiosInstance";
 import { ApiResponseSuccess } from "../../../../../shared/types";
 import Button from "../../../../../shared/ui/Button/ButtonNoDiv";
-import { JSX } from "react/jsx-runtime";
+import styles from './AuthForm.module.css';
 
 type Props = {
   type: "signin" | "signup";
@@ -26,7 +26,6 @@ export default function AuthForm({ type, setUser }: Props): JSX.Element {
   const [inputs, setInputs] = useState<InputsType>(inputsInitialState);
   const [loading, setLoading] = useState<boolean>(false);
   const navigate = useNavigate();
-console.log(type);
 
   const onChangeHandler = (event: React.ChangeEvent<HTMLInputElement>): void => {
     setInputs((prevState) => ({
@@ -48,7 +47,6 @@ console.log(type);
       const { isValid, error: validationError } = UserValidator.validateSignIn(inputs);
       if (!isValid) {
         antMessage.error(validationError);
-        console.log("Ошибка валидации данных", validationError);
         setLoading(false);
         return;
       }
@@ -87,7 +85,6 @@ console.log(type);
       const { isValid, error: validationError } = UserValidator.validateSignUp(inputs);
       if (!isValid) {
         antMessage.error(validationError);
-        console.log("Ошибка валидации данных", validationError);
         setLoading(false);
         return;
       }
@@ -124,9 +121,8 @@ console.log(type);
   }
 
   return (
-    <>
-      <div>AuthFORM</div>
-      <form onSubmit={submitHandler}>
+    <div className={styles.formContainer}>
+      <form onSubmit={submitHandler} className={styles.form}>
         <input
           value={inputs.email}
           name={'email'}
@@ -135,6 +131,7 @@ console.log(type);
           type="email"
           autoFocus
           required
+          className={styles.input}
         />
         <input
           value={inputs.password}
@@ -143,6 +140,7 @@ console.log(type);
           onChange={onChangeHandler}
           type="password"
           required
+          className={styles.input}
         />
         {type === 'signup' && (
           <input
@@ -152,10 +150,11 @@ console.log(type);
             onChange={onChangeHandler}
             type="text"
             required
+            className={styles.input}
           />
         )}
         <Button disabled={loading} color="green" type='submit' text={type === 'signup' ? 'Регистрация' : "Авторизация"} />
       </form>
-    </>
+    </div>
   );
 }

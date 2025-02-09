@@ -1,0 +1,31 @@
+/* AuthForm.module.css */
+.formContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 40vh;
+  }
+  
+  .form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 100%;
+    max-width: 500px;
+    padding: 20px;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+  }
+  
+  .input {
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+  }
+  
+  input:focus {
+    border-color: #4d90fe;
+    outline: none;
+  }
+  

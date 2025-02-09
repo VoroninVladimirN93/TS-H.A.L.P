@@ -81,7 +81,7 @@ class TaskController {
   static async update(req, res) {
     const { id } = req.params;
     const { user } = res.locals;
-    const { title, description, status } = req.body;
+    const { title, description, status } = req.body.data;
 
     try {
       const currentTask = await TaskService.getById(id);

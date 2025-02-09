@@ -6,6 +6,7 @@ import { UserType } from "../../entities/user/model";
 import { ApiResponseSuccess } from "../../shared/types";
 import { message as antMessage } from "antd";
 import Button from "../../shared/ui/Button/ButtonNoDiv";
+import styles from './TaskList.module.css';
 
 const inputsInitialState: RawTaskData = {
   title: "",
@@ -21,7 +22,6 @@ function TaskList({ user }: Props) {
   const [tasks, setTasks] = useState<ArrayTasksType | []>([]);
   const [inputs, setInputs] = useState<RawTaskData>(inputsInitialState);
   const [loading, setLoading] = useState<boolean>(false);
-  console.log(inputs);
 
   const changeHandler = (event: React.ChangeEvent<HTMLInputElement>): void => {
     setInputs((prevState) => ({
@@ -33,17 +33,13 @@ function TaskList({ user }: Props) {
   const onSubmitHandler = async () => {
     const { title, description, status } = inputs;
     setLoading(true);
-    if (!title || typeof title !== "string" || title.trim() === "") {
+    if (!title || title.trim() === "") {
       return antMessage.error("Не заполнено поле названия задачи");
     }
-    if (
-      !description ||
-      typeof description !== "string" ||
-      description.trim() === ""
-    ) {
+    if (!description || description.trim() === "") {
       return antMessage.error("Не заполнено поле описания задачи");
     }
-    if (!status || typeof status !== "string" || status.trim() === "") {
+    if (!status) {
       return antMessage.error("Не передан статус задачи");
     }
 
@@ -81,7 +77,7 @@ function TaskList({ user }: Props) {
       setLoading(true);
       try {
         const response = await TaskApi.getAllTasks();
-        const { data, statusCode, error, message } =
+        const { data, statusCode, error, } =
           response as ApiResponseSuccess<ArrayTasksType>;
 
         if (error) {
@@ -89,7 +85,6 @@ function TaskList({ user }: Props) {
           return;
         }
         if (statusCode === 200) {
-          antMessage.success(message);
           setTasks(data);
         }
       } catch (error) {
@@ -106,8 +101,9 @@ function TaskList({ user }: Props) {
   }, []);
 
   return (
-    <>
+    <div className={styles.listContainer}>
       <input
+        className={styles.inputField}
         onChange={changeHandler}
         type="text"
         placeholder="Введите название задачи"
@@ -117,6 +113,7 @@ function TaskList({ user }: Props) {
         required
       />
       <input
+        className={styles.inputField}
         onChange={changeHandler}
         type="text"
         placeholder="Введите описание задачи"
@@ -125,22 +122,27 @@ function TaskList({ user }: Props) {
         required
       />
       <Button
+        className={styles.button}
         text="Создать"
         color="red"
-        type={"button"}
+        type="button"
         onClick={onSubmitHandler}
       />
-      {loading && <div>Loading...</div>}
-      {tasks.map((task) => (
-        <TaskCard
-          key={task.id}
-          task={task}
-          user={user}
-          tasks={tasks}
-          setTasks={setTasks}
-        />
-      ))}
-    </>
+      {loading && <div className={styles.loading}>Loading...</div>}
+      <div className={styles.taskContainer}>
+        {tasks.map((task) => (
+          <TaskCard
+            key={task.id}
+            task={task}
+            user={user}
+            tasks={tasks}
+            setTasks={setTasks}
+            loading={loading}
+            setLoading={setLoading}
+          />
+        ))}
+      </div>
+    </div>
   );
 }
 

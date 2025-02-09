@@ -8,6 +8,7 @@ type Props = {
   onClick?: () => void;
   type: "button" | "submit" | "reset" | undefined;
   children?: ReactNode | JSX.Element;
+  className?: string;
 };
 
 export default function Button({

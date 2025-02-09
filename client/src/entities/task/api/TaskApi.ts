@@ -79,7 +79,7 @@ export default class TaskApi {
     updatedTask: AxiosRequestConfig<RawTaskData> | undefined
   ): Promise<ApiResponseSuccess<Task> | ApiResponseReject> {
     try {
-      const response = await axiosInstance.delete<ApiResponseSuccess<Task>>(
+      const response = await axiosInstance.put<ApiResponseSuccess<Task>>(
         `/tasks/${id}`,
         updatedTask
       );
