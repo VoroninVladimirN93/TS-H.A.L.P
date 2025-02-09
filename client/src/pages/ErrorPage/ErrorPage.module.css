@@ -1,0 +1,57 @@
+/* ErrorPage.module.css */
+.errorPageContainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f4f4f4;
+    font-family: 'Arial', sans-serif;
+  }
+  
+  .errorText {
+    text-align: center;
+    color: #333;
+    font-size: 24px;
+    margin-bottom: 20px;
+  }
+  
+  .errorText h1 {
+    font-size: 100px;
+    font-weight: bold;
+    margin: 0;
+    color: #ff6f61;
+    animation: fadeIn 1.5s ease-in-out;
+  }
+  
+  .errorText p {
+    font-size: 18px;
+    color: #666;
+    margin: 10px 0;
+  }
+  
+  .goHome {
+    text-decoration: none;
+    padding: 10px 20px;
+    background-color: #ff6f61;
+    color: white;
+    font-size: 16px;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+  }
+  
+  .goHome:hover {
+    background-color: #ff9b8a;
+  }
+  
+  @keyframes fadeIn {
+    0% {
+      opacity: 0;
+      transform: translateY(-30px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  

@@ -14,6 +14,7 @@ import SignUpPage from "../pages/SignUpPage/SignUpPage";
 import TaskPage from "../pages/TaskPage/TaskPage";
 import Navbar from "../widgets/Navbar/Navbar";
 import MainPage from "../pages/MainPage/MainPage/MainPage";
+import ErrorPage from "../pages/ErrorPage/ErrorPage";
 
 function App() {
   const [user, setUser] = useState<UserType | null>(null);
@@ -58,6 +59,10 @@ function App() {
         },        {
           path: "/",
           element:  <MainPage user={user} />
+        },
+        {
+          path: "*",
+          element:  <ErrorPage />
         },
       ],
     },
