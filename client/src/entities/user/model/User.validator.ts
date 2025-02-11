@@ -1,4 +1,4 @@
-import { SignInData, SignUpData } from ".";
+import { SignInData, SignUpData } from "./types";
 
 type IValidationResult = { isValid: boolean; error: string | null };
 

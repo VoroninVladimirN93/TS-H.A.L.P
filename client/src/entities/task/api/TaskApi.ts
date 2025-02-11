@@ -2,9 +2,9 @@ import { AxiosError, AxiosRequestConfig } from "axios";
 import { defaultRejectedAxiosError } from "../../../shared/consts";
 import { axiosInstance } from "../../../shared/lib/axiosInstance";
 import { ApiResponseReject, ApiResponseSuccess } from "../../../shared/types";
-import { ArrayTasksType, RawTaskData, Task } from "../model";
+import { ArrayTasksType, RawTaskData, Task } from "../model/types";
 
-export default class TaskApi {
+export class TaskApi {
   static async getAllTasks(): Promise<
     ApiResponseSuccess<ArrayTasksType> | ApiResponseReject
   > {

@@ -1,7 +1,7 @@
 import React from 'react';
 import styles from './ErrorPage.module.css';
 
-function ErrorPage() {
+export  function ErrorPage() {
   return (
     <div className={styles.errorPageContainer}>
       <div className={styles.errorText}>
@@ -12,5 +12,3 @@ function ErrorPage() {
     </div>
   );
 }
-
-export default ErrorPage;

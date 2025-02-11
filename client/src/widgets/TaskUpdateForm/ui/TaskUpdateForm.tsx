@@ -1,11 +1,10 @@
 import React, { useState } from "react";
-import { UserType } from "../../entities/user/model";
-import { ArrayTasksType, RawTaskData, Task } from "../../entities/task/model";
 import { message as antMessage } from "antd";
-import TaskApi from "../../entities/task/api/TaskApi";
-import Button from "../../shared/ui/Button/ButtonNoDiv";
-import { ApiResponseSuccess } from "../../shared/types";
-import styles from './TaskUpdateForm.module.css';
+import styles from "./TaskUpdateForm.module.css";
+import { ArrayTasksType, RawTaskData, Task, TaskApi } from "@/entities/task";
+import { UserType } from "@/entities/user";
+import { ApiResponseSuccess } from "@/shared/types";
+import Button from "@/shared/ui/Button/ButtonNoDiv";
 
 type Props = {
   user: UserType;
@@ -15,7 +14,7 @@ type Props = {
   setShowUpdateForm: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-function TaskUpdateForm({
+export function TaskUpdateForm({
   user,
   task,
   setTasks,
@@ -111,5 +110,3 @@ function TaskUpdateForm({
     </div>
   );
 }
-
-export default TaskUpdateForm;
