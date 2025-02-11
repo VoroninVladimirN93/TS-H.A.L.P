@@ -11,7 +11,7 @@ export default class TaskApi {
     try {
       const response = await axiosInstance.get<
         ApiResponseSuccess<ArrayTasksType>
-      >(`/tasks/`);
+      >(`/tasks`);
       return response.data;
     } catch (error) {
       const axiosError = error as AxiosError<ApiResponseReject>;
@@ -44,7 +44,7 @@ export default class TaskApi {
   ): Promise<ApiResponseSuccess<Task> | ApiResponseReject> {
     try {
       const response = await axiosInstance.post<ApiResponseSuccess<Task>>(
-        `/tasks/`,
+        `/tasks`,
         data
       );
       return response.data;

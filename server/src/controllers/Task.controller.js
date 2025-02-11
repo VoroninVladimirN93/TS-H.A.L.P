@@ -4,7 +4,7 @@ const TaskValidator = require("../utils/Task.validator");
 
 class TaskController {
   static async create(req, res) {
-    const { title, description, status = 'undone' } = req.body;
+    const { title, description, status = "undone" } = req.body;
     const { user } = res.locals;
     const { isValid, error } = TaskValidator.validateCreate({
       title,
@@ -44,7 +44,12 @@ class TaskController {
 
   static async getAll(req, res) {
     try {
-      const tasks = await TaskService.getAll();
+      const { user } = res.locals;
+      const tasks = await TaskService.getTasksByUser(user.id);
+      if (tasks.length === 0) {
+        res.status(200).json(formatResponse(204, "You have no tasks"));
+        return;
+      }
       res
         .status(200)
         .json(formatResponse(200, "Tasks retrieved successfully", tasks));

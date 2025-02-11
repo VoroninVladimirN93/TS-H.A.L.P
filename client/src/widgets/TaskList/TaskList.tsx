@@ -73,16 +73,20 @@ function TaskList({ user }: Props) {
   };
 
   useEffect(() => {
+    if(user){
     const fetchingHandler = async () => {
       setLoading(true);
       try {
         const response = await TaskApi.getAllTasks();
-        const { data, statusCode, error, } =
+        const { data, statusCode, error, message} =
           response as ApiResponseSuccess<ArrayTasksType>;
 
         if (error) {
           antMessage.error(error);
           return;
+        }
+        if (statusCode === 204) {
+          antMessage.success(message);
         }
         if (statusCode === 200) {
           setTasks(data);
@@ -97,8 +101,8 @@ function TaskList({ user }: Props) {
         setLoading(false);
       }
     };
-    fetchingHandler();
-  }, []);
+    fetchingHandler();}
+  }, [user]);
 
   return (
     <div className={styles.listContainer}>
