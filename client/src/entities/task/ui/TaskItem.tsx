@@ -1,12 +1,14 @@
 import { useState } from "react";
-import { message as antMessage } from "antd";
-import styles from "./TaskCard.module.css";
+import styles from "./TaskItem.module.css";
 import { ApiResponseSuccess } from "@/shared/types";
 import { ArrayTasksType, Task, TaskStatus } from "@/entities/task/model/types";
 import { UserType } from "@/entities/user";
 import Button from "@/shared/ui/Button/ButtonNoDiv";
 import { TaskUpdateForm } from "@/widgets/TaskUpdateForm";
-import { TaskApi } from "@/entities/task";
+import { TaskApi } from "../api/TaskApi";
+import { TASK_ACTION_TYPE } from "@/shared/enums/tasksActions";
+import { useTask } from "@/shared/hooks/useTask";
+import { useUser } from "@/shared/hooks/useUser";
 
 type Props = {
   user?: UserType | null;
@@ -17,32 +19,38 @@ type Props = {
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-export function TaskCard({ task, setLoading }: Props):React.JSX.Element {
+export function TaskItem({ task, setLoading }: Props): React.JSX.Element {
   const [showUpdateForm, setShowUpdateForm] = useState<boolean>(false);
 
+  const { dispatch } = useTask();
+  const { user } = useUser();
   const deleteHandler = async (id: number) => {
-    setLoading(true);
-    try {
-      const response = await TaskApi.deleteTaskById(id);
-      const { statusCode, error, message } =
-        response as ApiResponseSuccess<Task>;
-      if (error) {
-        antMessage.error(error);
-        return;
-      }
-      if (statusCode === 200) {
-        antMessage.success(message);
-        setTasks(tasks.filter((filteredArray) => filteredArray.id !== id));
-      }
-    } catch (error) {
-      if (error instanceof Error) {
-        antMessage.error(error.message);
-      } else {
-        antMessage.error("Unknown server error");
-      }
-    } finally {
-      setLoading(false);
-    }
+    // setLoading(true);
+    // try {
+    //   const response = await TaskApi.deleteTaskById(id);
+    //   const { statusCode, error, message } =
+    //     response as ApiResponseSuccess<Task>;
+    //   if (error) {
+    //     antMessage.error(error);
+    //     return;
+    //   }
+    //   if (statusCode === 200) {
+    //     antMessage.success(message);
+    //     setTasks(tasks.filter((filteredArray) => filteredArray.id !== id));
+    //   }
+    // } catch (error) {
+    //   if (error instanceof Error) {
+    //     antMessage.error(error.message);
+    //   } else {
+    //     antMessage.error("Unknown server error");
+    //   }
+    // } finally {
+    //   setLoading(false);
+    // }
+    TaskApi.deleteTaskById(id).then((response) => {
+      const { data } = response as ApiResponseSuccess<Task>;
+      dispatch({ type: TASK_ACTION_TYPE.REMOVE_TASK, id: data.id });
+    });
   };
 
   const statusClassName = (task: Task) => {
@@ -81,7 +89,6 @@ export function TaskCard({ task, setLoading }: Props):React.JSX.Element {
         <TaskUpdateForm
           user={user}
           task={task}
-          setTasks={setTasks}
           setLoading={setLoading}
           setShowUpdateForm={setShowUpdateForm}
         />

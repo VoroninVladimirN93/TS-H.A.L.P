@@ -2,7 +2,9 @@ import Button from "@/shared/ui/Button/ButtonNoDiv";
 import React, { useState } from "react";
 import styles from './TaskForm.module.css'
 import { useTask } from "@/shared/hooks/useTask";
-import { RawTaskData } from "@/entities/task";
+import { RawTaskData, Task, TaskApi } from "@/entities/task";
+import { ApiResponseSuccess } from "@/shared/types";
+import { TASK_ACTION_TYPE } from "@/shared/enums/tasksActions";
 
 const inputsInitialState: RawTaskData = {
   title: "",
@@ -11,7 +13,6 @@ const inputsInitialState: RawTaskData = {
 };
 
 export function TaskForm(): React.JSX.Element {
-
     const [inputs, setInputs] = useState<RawTaskData>(inputsInitialState);
 const {dispatch} = useTask()
 
@@ -19,7 +20,13 @@ const changeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
   setInputs((prevState)=> ({...prevState, [event.target.name]:event.target.value}))
 }
 
-
+const onSubmitHandler = async () => {
+  TaskApi.createTask(inputs)
+  .then((response)=> {
+    const {data:task} = response as ApiResponseSuccess<Task>
+    dispatch({type: TASK_ACTION_TYPE.ADD_TASK, task})
+  })
+};
 
   return (
     <div className={styles.listContainer}>
