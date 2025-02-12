@@ -1,14 +1,20 @@
 import { Link } from "react-router-dom";
 import Button from "../../../shared/ui/Button/ButtonNoDiv";
 import styles from './MainPage.module.css';
-import { useUser } from "@/shared/hooks/useUser";
+import { useEffect } from "react";
+import { useAppSelector } from "@/shared/hooks/reduxHooks";
 
 // type Props = {
 //   user: UserType | null;
 // };
 
 export function MainPage(): JSX.Element {
-  const {user} = useUser()
+  const user = useAppSelector((state) => state.user.user);
+
+  useEffect(() => {
+    document.title = 'Main Page'
+}, [])
+
   return (
     <div>
       <div className={styles.container}>

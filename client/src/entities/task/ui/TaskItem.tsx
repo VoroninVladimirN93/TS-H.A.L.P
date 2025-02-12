@@ -1,14 +1,12 @@
 import { useState } from "react";
 import styles from "./TaskItem.module.css";
-import { ApiResponseSuccess } from "@/shared/types";
 import { ArrayTasksType, Task, TaskStatus } from "@/entities/task/model/types";
 import { UserType } from "@/entities/user";
 import Button from "@/shared/ui/Button/ButtonNoDiv";
 import { TaskUpdateForm } from "@/widgets/TaskUpdateForm";
-import { TaskApi } from "../api/TaskApi";
-import { TASK_ACTION_TYPE } from "@/shared/enums/tasksActions";
-import { useTask } from "@/shared/hooks/useTask";
-import { useUser } from "@/shared/hooks/useUser";
+import { useAppDispatch, useAppSelector } from "@/shared/hooks/reduxHooks";
+import { unwrapResult } from "@reduxjs/toolkit";
+import { deleteByIdThunk } from "../api/taskThunkApi";
 
 type Props = {
   user?: UserType | null;
@@ -21,9 +19,8 @@ type Props = {
 
 export function TaskItem({ task, setLoading }: Props): React.JSX.Element {
   const [showUpdateForm, setShowUpdateForm] = useState<boolean>(false);
-
-  const { dispatch } = useTask();
-  const { user } = useUser();
+const user = useAppSelector((state) => state.user.user);
+  const dispatch = useAppDispatch();
   const deleteHandler = async (id: number) => {
     // setLoading(true);
     // try {
@@ -47,10 +44,22 @@ export function TaskItem({ task, setLoading }: Props): React.JSX.Element {
     // } finally {
     //   setLoading(false);
     // }
-    TaskApi.deleteTaskById(id).then((response) => {
-      const { data } = response as ApiResponseSuccess<Task>;
-      dispatch({ type: TASK_ACTION_TYPE.REMOVE_TASK, id: data.id });
-    });
+    // TaskApi.deleteTaskById(id).then((response) => {
+    //   const { data } = response as ApiResponseSuccess<Task>;
+    //   dispatch({ type: TASK_ACTION_TYPE.REMOVE_TASK, id: data.id });
+    // });
+    {
+      try{
+      const resultAction = await   dispatch(deleteByIdThunk(id))
+      unwrapResult(resultAction)
+    } catch (error) {
+      if (error instanceof Error) {
+          console.log(error.message);
+      } else {
+          console.log('An unexpected error');
+      }
+    }}
+
   };
 
   const statusClassName = (task: Task) => {

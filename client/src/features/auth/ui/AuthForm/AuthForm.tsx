@@ -1,13 +1,18 @@
-import React, { SyntheticEvent, useContext, useState } from "react";
+import React, { SyntheticEvent, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { message as antMessage } from "antd";
 import styles from "./AuthForm.module.css";
 import UserValidator from "@/entities/user/model/User.validator";
-import { UserApi, UserWithTokenType } from "@/entities/user";
-import { UserContext } from "@/entities/user/provider/UserContext";
+import { UserWithTokenType } from "@/entities/user";
 import { setAccessToken } from "@/shared/lib/axiosInstance";
 import { ApiResponseSuccess } from "@/shared/types";
 import Button from "@/shared/ui/Button/ButtonNoDiv";
+import { useAppDispatch } from "@/shared/hooks/reduxHooks";
+import {
+  authorizationThunk,
+  registrationThunk,
+} from "@/entities/user/api/userThunkApi";
+import { unwrapResult } from "@reduxjs/toolkit";
 
 type Props = {
   type: "signin" | "signup";
@@ -23,8 +28,7 @@ type InputsType = {
 const inputsInitialState = { email: "", password: "", username: "" };
 
 export function AuthForm({ type }: Props): JSX.Element {
-
-  const context = useContext(UserContext)
+  const dispatch = useAppDispatch();
 
   const [inputs, setInputs] = useState<InputsType>(inputsInitialState);
   const [loading, setLoading] = useState<boolean>(false);
@@ -58,37 +62,23 @@ export function AuthForm({ type }: Props): JSX.Element {
         setLoading(false);
         return;
       }
-
       try {
-        const response = await UserApi.signIn({
-          email: normalizedEmail,
-          password,
-        });
-
-        const { data, statusCode, error, message } =
-          response as ApiResponseSuccess<UserWithTokenType>;
-        if (error) {
-          antMessage.error(error);
-          return;
-        }
-        if (statusCode === 200) {
-          antMessage.success(message);
-          context!.setUser(data.user);
-          setAccessToken(data.accessToken);
-          setInputs(inputsInitialState);
-          navigate("/");
-        }
+        const resultAction = await dispatch(
+          authorizationThunk({
+            email: normalizedEmail,
+            password,
+          })
+        );
+        unwrapResult(resultAction);
+        navigate("/");
       } catch (error) {
         if (error instanceof Error) {
-          antMessage.error(error.message);
+          console.log(error.message);
         } else {
-          antMessage.error("Unknown server error");
+          console.log("An unexpected error");
         }
-      } finally {
-        setLoading(false);
       }
     }
-
     // РЕГИСТРАЦИЯ
     else {
       const { isValid, error: validationError } =
@@ -98,35 +88,23 @@ export function AuthForm({ type }: Props): JSX.Element {
         setLoading(false);
         return;
       }
-
       try {
-        const response = await UserApi.signUp({
-          email: normalizedEmail,
-          password,
-          username,
-        });
-
-        const { data, statusCode, error, message } =
-          response as ApiResponseSuccess<UserWithTokenType>;
-        if (error) {
-          antMessage.error(error);
-          return;
-        }
-        if (statusCode === 201) {
-          antMessage.success(message);
-          context!.setUser(data.user);
-          setAccessToken(data.accessToken);
-          setInputs(inputsInitialState);
-          navigate("/");
-        }
+        event.preventDefault();
+        const resultAction = await dispatch(
+          registrationThunk({
+            email: normalizedEmail,
+            password,
+            username,
+          })
+        );
+        unwrapResult(resultAction);
+        navigate("/");
       } catch (error) {
         if (error instanceof Error) {
-          antMessage.error(error.message);
+          console.log(error.message);
         } else {
-          antMessage.error("Unknown server error");
+          console.log("An unexpected error");
         }
-      } finally {
-        setLoading(false);
       }
     }
   }

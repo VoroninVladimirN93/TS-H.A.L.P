@@ -1,3 +1,5 @@
+export { taskReducer } from "./slice/taskSlice";
+
 export { TaskItem } from "./ui/TaskItem";
 
 

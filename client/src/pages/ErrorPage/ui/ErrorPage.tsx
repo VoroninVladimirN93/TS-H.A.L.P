@@ -1,7 +1,12 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import styles from './ErrorPage.module.css';
 
-export  function ErrorPage() {
+export  function ErrorPage() : React.JSX.Element {
+
+    useEffect(() => {
+      document.title = 'Registration Page'
+  }, [])
+
   return (
     <div className={styles.errorPageContainer}>
       <div className={styles.errorText}>

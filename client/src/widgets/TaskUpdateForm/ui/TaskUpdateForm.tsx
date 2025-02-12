@@ -5,7 +5,10 @@ import { UserType } from "@/entities/user";
 import { ApiResponseSuccess } from "@/shared/types";
 import Button from "@/shared/ui/Button/ButtonNoDiv";
 import { TASK_ACTION_TYPE } from "@/shared/enums/tasksActions";
-import { useTask } from "@/shared/hooks/useTask";
+import { useAppDispatch } from "@/shared/hooks/reduxHooks";
+import { unwrapResult } from "@reduxjs/toolkit";
+import { updateByIdThunk } from "@/entities/task/api/taskThunkApi";
+import {message as antMessage} from 'antd'
 
 type Props = {
   user: UserType;
@@ -16,7 +19,7 @@ type Props = {
 };
 
 export function TaskUpdateForm({
-  user,
+  // user,
   task,
   setLoading,
   setShowUpdateForm,
@@ -35,18 +38,18 @@ export function TaskUpdateForm({
   ): void {
     setInputs((prev) => ({ ...prev, [event.target.name]: event.target.value }));
   }
-const {dispatch} = useTask()
+  const dispatch = useAppDispatch();
 
   async function sendUpdatedTask() {
-    // if (user.id !== task.user_id) {
-    //   antMessage.error(`No rights to update task with id ${task.id}`);
-    //   return;
-    // }
-    // if (isEmptyFormData) {
-    //   antMessage.error("Все поля обязательны к заполнению");
-    //   return;
-    // }
-    // setLoading(true);
+    if (user.id !== task.user_id) {
+      antMessage.error(`No rights to update task with id ${task.id}`);
+      return;
+    }
+    if (isEmptyFormData) {
+      antMessage.error("Все поля обязательны к заполнению");
+      return;
+    }
+    setLoading(true);
     // try {
     //   const response = await TaskApi.updateTaskById(task.id, {
     //     data: inputs,
@@ -75,12 +78,25 @@ const {dispatch} = useTask()
 
 
     
-      TaskApi.updateTaskById(task.id, {data: inputs,})
-      .then((response)=> {
-        const {data:task} = response as ApiResponseSuccess<Task>
-        dispatch({type: TASK_ACTION_TYPE.UPDATE_TASK, task})
-      })
-      setShowUpdateForm(false)
+      // TaskApi.updateTaskById(task.id, {data: inputs,})
+      // .then((response)=> {
+      //   const {data:task} = response as ApiResponseSuccess<Task>
+      //   dispatch({type: TASK_ACTION_TYPE.UPDATE_TASK, task})
+      // })
+      // setShowUpdateForm(false)
+
+
+      {
+        try{
+        const resultAction = await   dispatch(updateByIdThunk(task.id,))
+        unwrapResult(resultAction)
+      } catch (error) {
+        if (error instanceof Error) {
+            console.log(error.message);
+        } else {
+            console.log('An unexpected error');
+        }
+      }}
   }
 
   return (

@@ -1,18 +1,32 @@
 import { useNavigate } from "react-router-dom";
 import styles from "./Navbar.module.css";
-import { UserApi, } from "@/entities/user";
 import Button from "@/shared/ui/Button/ButtonNoDiv";
-import { useUser } from "@/shared/hooks/useUser";
+import { useAppDispatch, useAppSelector } from "@/shared/hooks/reduxHooks";
+import { logoutThunk } from "@/entities/user/api/userThunkApi";
 
 
 export function Navbar() {
-  const {user,setUser} = useUser()
+  const dispatch = useAppDispatch();
+  const user = useAppSelector((state) => state.user.user);
+
   const navigate = useNavigate();
-  const signOutHandler = async () => {
-    await UserApi.signOut();
-    setUser(null);
-    navigate("/signin");
-  };
+  // const signOutHandler = async () => {
+  //   await UserApi.signOut();
+  //   setUser(null);
+  //   navigate("/signin");
+  // };
+
+  const signOutHandler = async (): Promise<void> => {
+    try {
+        dispatch(logoutThunk());
+    } catch (error) {
+        if (error instanceof Error) {
+            console.log(error.message);
+        } else {
+            console.log('An unexpected error');
+        }
+    }
+};
 
   return (
     <div className={styles.container}>

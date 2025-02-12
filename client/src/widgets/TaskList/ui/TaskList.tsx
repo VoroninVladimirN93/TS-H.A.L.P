@@ -1,16 +1,15 @@
 import styles from "./TaskList.module.css";
 import { useEffect, useState } from "react";
-import { useUser } from "@/shared/hooks/useUser";
-import { ArrayTasksType, TaskApi, TaskItem } from "@/entities/task";
-import { ApiResponseSuccess } from "@/shared/types";
-import { useTask } from "@/shared/hooks/useTask";
-import { TASK_ACTION_TYPE } from "@/shared/enums/tasksActions";
+import { TaskItem } from "@/entities/task";
+import { useAppDispatch, useAppSelector } from "@/shared/hooks/reduxHooks";
+import { getAllThunk } from "@/entities/task/api/taskThunkApi";
+import { unwrapResult } from "@reduxjs/toolkit";
 
 export function TaskList() {
   const [loading, setLoading] = useState<boolean>(false);
-  const { user } = useUser();
-  const { state, dispatch } = useTask();
-  const { tasks } = state;
+  const dispatch = useAppDispatch();
+  const tasks = useAppSelector((state) => state.task.tasks);
+  const user = useAppSelector((state) => state.user.user);
 
   // useEffect(() => {
   //   if (user) {
@@ -44,14 +43,31 @@ export function TaskList() {
   //   }
   // }, [user]);
 
-  useEffect(() => {
-    if (user) {
-      TaskApi.getAllTasks().then((response) => {
-        const { data: tasks } = response as ApiResponseSuccess<ArrayTasksType>;
-        dispatch({ type: TASK_ACTION_TYPE.SET_TASKS, tasks });
-      });
+  // useEffect(() => {
+  //   if (user) {
+  //     TaskApi.getAllTasks().then((response) => {
+  //       const { data: tasks } = response as ApiResponseSuccess<ArrayTasksType>;
+  //       dispatch({ type: TASK_ACTION_TYPE.SET_TASKS, tasks });
+  //     });
+  //   }
+  // }, [dispatch, user]);
+
+  useEffect(()=>{
+const fetchingTasks = async () => {
+  if(user){
+    try{
+    const resultAction = await   dispatch(getAllThunk())
+    unwrapResult(resultAction)
+  } catch (error) {
+    if (error instanceof Error) {
+        console.log(error.message);
+    } else {
+        console.log('An unexpected error');
     }
-  }, [dispatch, user]);
+  }}
+}
+fetchingTasks()
+  },[user,dispatch])
 
   return (
     <div className={styles.listContainer}>
