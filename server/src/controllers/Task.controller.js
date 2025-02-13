@@ -1,6 +1,7 @@
 const TaskService = require("../services/Task.service");
 const formatResponse = require("../utils/formatResponse");
 const TaskValidator = require("../utils/Task.validator");
+const colors = require('ansi-colors');
 
 class TaskController {
   static async create(req, res) {
@@ -32,6 +33,8 @@ class TaskController {
           .json(formatResponse(400, "Failed to create new task"));
       }
       const fullTask = await TaskService.getById(newTask.id);
+      console.log(colors.bgGreen("Task created successfully"));
+      
       res
         .status(201)
         .json(formatResponse(201, "Task created successfully", fullTask));
@@ -47,9 +50,10 @@ class TaskController {
       const { user } = res.locals;
       const tasks = await TaskService.getTasksByUser(user.id);
       if (tasks.length === 0) {
-        res.status(200).json(formatResponse(204, "You have no tasks"));
+        res.status(200).json(formatResponse(204, "You have no tasks",[]));
         return;
       }
+      console.log(colors.bgMagenta("Tasks retrieved successfully"));
       res
         .status(200)
         .json(formatResponse(200, "Tasks retrieved successfully", tasks));
@@ -86,7 +90,19 @@ class TaskController {
   static async update(req, res) {
     const { id } = req.params;
     const { user } = res.locals;
-    const { title, description, status } = req.body.data;
+    console.log(req.body);
+
+    // Проверяем, есть ли req.body и req.body.data
+    if (!req.body) {
+      console.log('\x1b[33m%s\x1b[0m', 'Bad request: No data provided');
+      // console.log(chalk.yellow('Bad request: No data provided'));
+      console.log(colors.yellow('Bad request: No data provided'));
+      return res
+        .status(400)
+        .json(formatResponse(400, "Bad request: No data provided", null));
+    }
+
+    const { title, description, status } = req.body;
 
     try {
       const currentTask = await TaskService.getById(id);
@@ -97,7 +113,7 @@ class TaskController {
       }
 
       if (currentTask.user_id !== user.id) {
-        res
+        return res
           .status(400)
           .json(formatResponse(400, "No rights", null, "No rights"));
       } else {
@@ -124,7 +140,7 @@ class TaskController {
             .status(400)
             .json(formatResponse(400, "Failed to update task"));
         }
-
+        console.log(colors.bgYellowBright("Task updated successfully"));
         res
           .status(200)
           .json(formatResponse(200, "Task updated successfully", updatedTask));
@@ -149,6 +165,7 @@ class TaskController {
       }
       if (task.user_id === user.id) {
         await TaskService.delete(id);
+        console.log(colors.bgRed("Task delete successfully"));
         res.status(200).json(formatResponse(200, "Task delete", task));
       } else {
         res
