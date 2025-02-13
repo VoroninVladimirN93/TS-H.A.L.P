@@ -39,13 +39,6 @@ export function TaskForm(): React.JSX.Element {
         }
     }
 
-    //   TaskApi.createTask(inputs)
-    //   .then((response)=> {
-    //     const {data:task} = response as ApiResponseSuccess<Task>
-    //     dispatch({type: TASK_ACTION_TYPE.ADD_TASK, task})
-    //   })
-    // };
-
     return (
         <form onSubmit={onSubmitHandler} className={styles.listContainer}>
             <input

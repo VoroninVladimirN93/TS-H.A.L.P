@@ -4,7 +4,7 @@ import Button from "@/shared/ui/Button/ButtonNoDiv"
 import { useAppDispatch, useAppSelector } from "@/shared/hooks/reduxHooks"
 import { logoutThunk } from "@/entities/user/api/userThunkApi"
 
-export function Navbar() {
+export function Navbar(): React.JSX.Element {
     const dispatch = useAppDispatch()
     const user = useAppSelector((state) => state.user.user)
 

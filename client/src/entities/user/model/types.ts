@@ -1,26 +1,3 @@
-// export interface ISignInData {
-//   email: string;
-//   password: string;
-// }
-
-// export interface ISignUpData extends ISignInData {
-//   confirmPassword?: string;
-//   username: string;
-// }
-
-// export interface IUserType {
-//   id: number;
-//   username: string;
-//   password: string;
-//   email: string;
-//   createdAt: Date;
-//   updatedAt: Date;
-// }
-
-// export interface IUserWithTokenType extends IUserType {
-//   accessToken: string;
-// }
-
 // Данные для входа
 export type SignInData = {
   email: string;

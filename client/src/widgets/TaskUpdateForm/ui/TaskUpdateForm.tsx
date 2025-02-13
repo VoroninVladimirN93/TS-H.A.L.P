@@ -21,7 +21,7 @@ export function TaskUpdateForm({
     task,
     setLoading,
     setShowUpdateForm,
-}: Props) {
+}: Props): React.JSX.Element {
     const [inputs, setInputs] = useState<RawTaskData>({
         title: task.title,
         description: task.description,
@@ -52,39 +52,6 @@ export function TaskUpdateForm({
             return
         }
         setLoading(true)
-        // try {
-        //   const response = await TaskApi.updateTaskById(task.id, {
-        //     data: inputs,
-        //   });
-        //   const { data, statusCode, error, message } =
-        //     response as ApiResponseSuccess<Task>;
-        //   if (error) {
-        //     antMessage.error(error);
-        //     return;
-        //   }
-        //   antMessage.success(message);
-        //   if (statusCode === 200) {
-        //     setTasks((prev) => prev.map((el) => (el.id === data.id ? data : el)));
-        //     setInputs({ title: "", description: "", status: "undone" });
-        //     setShowUpdateForm(false);
-        //   }
-        // } catch (error) {
-        //   if (error instanceof Error) {
-        //     antMessage.error(error.message);
-        //   } else {
-        //     antMessage.error("Unknown server error");
-        //   }
-        // } finally {
-        //   setLoading(false);
-        // }
-
-        // TaskApi.updateTaskById(task.id, {data: inputs,})
-        // .then((response)=> {
-        //   const {data:task} = response as ApiResponseSuccess<Task>
-        //   dispatch({type: TASK_ACTION_TYPE.UPDATE_TASK, task})
-        // })
-        // setShowUpdateForm(false)
-
         {
             try {
                 console.log(task.id, inputs)

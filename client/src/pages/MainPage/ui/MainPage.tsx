@@ -4,10 +4,6 @@ import styles from './MainPage.module.css';
 import { useEffect } from "react";
 import { useAppSelector } from "@/shared/hooks/reduxHooks";
 
-// type Props = {
-//   user: UserType | null;
-// };
-
 export function MainPage(): JSX.Element {
   const user = useAppSelector((state) => state.user.user);
 
@@ -35,6 +31,7 @@ export function MainPage(): JSX.Element {
           </p>
         </div>
       </div>
+      
       {user && (
         <Link to="/tasks">
           <Button className={styles.Btn} text="Перейти к задачам" color="green" type="button" />
